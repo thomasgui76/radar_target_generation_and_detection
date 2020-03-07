@@ -6,8 +6,8 @@
 ![whole porject process](images/project_layout.png)
 
 ### 1. Configure the FMCW waveform based on the system requirements.
-###     set the range resolution, maximum range, define the target's initial position and velocity,in the project, velocity is constant.
-###     c is speed of light, B_sweep is The sweep bandwidth, T_chirp is the sweep time, fc is the carrier frequency of radar, 77GHz.
+####     set the range resolution, maximum range, define the target's initial position and velocity,in the project, velocity is constant.
+####     c is speed of light, B_sweep is the sweep bandwidth, T_chirp is the sweep time, fc is the carrier frequency of radar, 77GHz.
 - initial position 110m
 - initial velocity -20m
 - B_sweep = c /(2∗rangeResolution)
@@ -30,11 +30,19 @@
 - Keep one half of the signal
 - Plot the output
 - There should be a peak at the initial position of the target
-### Range FFT output
+#### Range FFT output
 ![Range FFT](images/Range_FFT.png)
 
 ### 4. perform the 2D CFAR processing on the output of 2nd FFT to display the target.
-- Determine the number of Training cells for each dimension. Similarly, pick the number of guard cells.
+- Determine the number of Training cells for each dimension. Similarly, pick the number of guard cells. in my case
+```
+%Select the number of Training Cells in both the dimensions.
+Tr = 20;
+Td = 10;
+%Select the number of Guard Cells in both dimensions around the Cell under test (CUT) for accurate estimation
+Gr = 6;
+Gd = 3;
+```
 - Slide the cell under test across the complete matrix. Make sure the CUT has margin for Training and Guard cells from the edges.
 - For every iteration sum the signal level within all the training cells. To sum convert the value from logarithmic to linear using db2pow function.
 - Average the summed values for all of the training cells used. After averaging convert it back to logarithmic using pow2db.
@@ -42,5 +50,5 @@
 - Next, compare the signal under CUT against this threshold.
 If the CUT level > threshold assign it a value of 1, else equate it to 0.
 
-### 2D CFAR output
+#### 2D CFAR output
 ![2D_CFAR](images/CFAR.png)

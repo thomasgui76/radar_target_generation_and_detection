@@ -82,6 +82,7 @@ for i=1:length(t)
     
 end
 
+
 %% RANGE MEASUREMENT
 
 
@@ -114,7 +115,7 @@ subplot(2,1,1)
  f = Nr *(0:(Nr/2))/Nr;
 plot(f, P1);
  
-axis ([0 200 0 1]);
+axis ([0 200 0 0.5]);
 
 
 
@@ -164,7 +165,7 @@ Gd = 3;
 
 % *%TODO* :
 % offset the threshold by SNR value in dB
-offset = 4.8;
+offset = 4;
 
 % *%TODO* :
 %Create a vector to store noise_level for each iteration on training cells
@@ -187,9 +188,10 @@ for i = 1:(row-(Gr+Tr))
    for j = 1:(col-(Gd+Td))
    % Use RDM[x,y] as the matrix from the output of 2D FFT for implementing
    % CFAR
-       noise = db2pow(RDM(i:i+Tr-1,j:j+Td-1));
-       noise_level = sum(sum(noise));
-       average = pow2db(noise_level/(Tr*Td));
+       noise_include_guard = db2pow(RDM(i:i+Tr+Gr-1,j:j+Td+Gd-1));
+       noise_guard = db2pow(RDM(i+Tr:i+Tr+Gr-1,j+Td:j+Td+Gd-1));
+       noise_level = sum(sum(noise_include_guard))-sum(sum(noise_guard));
+       average = pow2db(noise_level/((Tr+Gr)*(Td+Gd)-Tr*Td));
        threshold = average + offset;
        signal = RDM(i+Tr+Gr,j+Td+Gd);
        
